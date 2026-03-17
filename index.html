@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <script>
+        // Immedate auth check before page load
+        const lsUser = localStorage.getItem('kli_user');
+        if (!lsUser) {
+            window.location.replace("/auth.html");
+        } else {
+            try {
+                const userObj = JSON.parse(lsUser);
+                if (Date.now() - userObj.loginTime > 8 * 60 * 60 * 1000) {
+                    localStorage.removeItem('kli_user');
+                    window.location.replace("/auth.html");
+                } else {
+                    const urlId = window.location.pathname.split('/app/')[1];
+                    if (urlId && urlId !== userObj.googleId) {
+                        window.location.replace(`/app/${userObj.googleId}`);
+                    } else if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+                        window.location.replace(`/app/${userObj.googleId}`);
+                    }
+                }
+            } catch (e) {
+                window.location.replace("/auth.html");
+            }
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="KLI Brands Intelligence — AI-powered wholesale cosmetics search and catalog management">
+    <title>KLI Brands Intelligence</title>
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        /* User Profile in Sidebar */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: var(--space-3) var(--space-2);
+            margin-top: var(--space-2);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .user-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            object-fit: cover;
+        }
+
+        .user-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 11px;
+            text-transform: capitalize;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-weight: 500;
+        }
+
+        .role-admin {
+            background: var(--accent-subtle);
+            color: var(--accent-primary);
+        }
+
+        .role-staff {
+            background: #EEF2FF;
+            color: #4F46E5;
+        }
+
+        [data-theme="dark"] .role-staff {
+            background: #1E1B4B;
+            color: #818CF8;
+        }
+
+        .role-readonly {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+        }
+
+        .btn-signout {
+            padding: 6px;
+            color: var(--text-secondary);
+        }
+
+        .btn-signout:hover {
+            color: var(--error);
+            background: rgba(220, 38, 38, 0.08);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app" id="app">
+
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-main">KLI</span>
+                    <span class="logo-sub">BRANDS</span>
+                </div>
+                <button class="btn-primary btn-new-chat" id="btnNewChat" onclick="openNewSessionModal()">
+                    <i data-lucide="plus"></i> New Chat
+                </button>
+            </div>
+
+            <div class="chat-history" id="chatHistory">
+                <div class="chat-history-label">Recent Chats</div>
+                <!-- Session items inserted by JS -->
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="btn-ghost sidebar-nav-btn" id="navUpload" onclick="switchToUpload()">
+                    <i data-lucide="upload-cloud" class="icon-sm"></i> Upload Data
+                </button>
+                <button class="btn-ghost sidebar-nav-btn" id="navSettings" onclick="openSettings()">
+                    <i data-lucide="settings" class="icon-sm"></i> Settings
+                </button>
+
+                <div class="user-profile" onclick="openProfileModal()">
+                    <img id="userPhoto"
+                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='none' stroke='%239E9E9E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E"
+                        alt="User">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">User</div>
+                        <div class="user-email" id="userEmail"
+                            style="font-size:10px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            email@example.com</div>
+                        <div class="user-role" id="userRole" style="margin-top:2px;">Role</div>
+                    </div>
+                    <button class="btn-ghost btn-signout" onclick="signOut()" title="Sign Out">
+                        <i data-lucide="log-out" class="icon-sm"></i>
+                    </button>
+                </div>
+
+                <div style="font-size:11px; color:var(--text-muted); padding:var(--space-2); text-align:center;">v2.0.0
+                </div>
+            </div>
+            <!-- Resizer Handle -->
+            <div class="sidebar-resizer" id="sidebarResizer"></div>
+        </aside>
+
+        <!-- Sidebar overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"
+            style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:99;"></div>
+
+        <!-- ============ MAIN AREA ============ -->
+        <main class="main">
+
+            <!-- Top Bar (Minimal) -->
+            <div class="top-bar">
+                <button class="btn-ghost mobile-menu-btn" id="btnMobileMenu" onclick="toggleSidebar()">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="top-bar-title" id="topBarTitle" style="font-weight: 500; display: none;">New Chat</div>
+
+                <div class="top-bar-spacer"></div>
+
+                <!-- Theme Toggle -->
+                <button class="btn-theme-toggle" id="btnThemeToggle" onclick="toggleTheme()" title="Toggle Theme">
+                    <i data-lucide="moon" id="themeIcon"></i>
+                </button>
+            </div>
+
+            <!-- ======== CHAT VIEW ======== -->
+            <div class="view-panel active" id="viewChat">
+
+                <div class="chat-layout-wrapper">
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-logo">KLI</div>
+                        <div class="empty-tagline">The Professional Beauty Standard</div>
+                        <div class="quick-prompts">
+                            <button class="quick-prompt" onclick="sendQuickPrompt('Show me K18 hair products')">K18 hair
+                                products</button>
+                            <button class="quick-prompt" onclick="sendQuickPrompt('Sunscreens under $30')">Sunscreens
+                                under $30</button>
+                            <button class="quick-prompt" onclick="sendQuickPrompt('Best skincare deals')">Best skincare
+                                deals</button>
+                            <button class="quick-prompt" onclick="sendQuickPrompt('Find shampoos and oils')">Shampoos &
+                                oils</button>
+                        </div>
+                    </div>
+
+                    <!-- Messages Thread -->
+                    <div class="messages-container" id="messagesContainer" style="display:none;">
+                        <div class="messages-inner-wrap" id="messagesInnerWrap"></div>
+                    </div>
+
+                    <!-- Input Bar -->
+                    <div class="input-bar">
+                        <div class="input-wrapper">
+                            <textarea id="chatInput" placeholder="Ask about products, prices, brands..." rows="1"
+                                maxlength="2000" onkeydown="handleInputKeydown(event)"
+                                oninput="autoResizeInput(this)"></textarea>
+                            <button class="btn-send" id="btnSend" onclick="sendMessage()" disabled>
+                                <i data-lucide="arrow-up" style="width:18px;height:18px;"></i>
+                            </button>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px;">
+                            AI can make mistakes. Verify important product data.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======== UPLOAD VIEW ======== -->
+            <div class="view-panel" id="viewUpload">
+                <div class="upload-panel">
+                    <div class="upload-title">Upload Product Data</div>
+                    <div class="upload-subtitle">Add new catalog sheets or update existing inventory</div>
+
+                    <!-- Dropzone -->
+                    <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()"
+                        ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)"
+                        ondrop="handleDrop(event)">
+                        <i data-lucide="file-spreadsheet" class="dropzone-icon" style="width:40px;height:40px;"></i>
+                        <div class="dropzone-text">Drag & drop your file here or click to browse</div>
+                        <div class="dropzone-hint">Supports: .xlsx &nbsp;.xls &nbsp;.csv &nbsp;.ods</div>
+                    </div>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.ods" style="display:none"
+                        onchange="handleFileSelect(event)">
+
+                    <!-- File Chip -->
+                    <div class="file-chip" id="fileChip">
+                        <i data-lucide="file" class="file-chip-icon icon-sm"></i>
+                        <span class="file-chip-name" id="fileChipName"></span>
+                        <span class="file-chip-size" id="fileChipSize"></span>
+                        <button class="btn-ghost file-chip-remove" onclick="removeSelectedFile()" style="padding:4px;">
+                            <i data-lucide="x" class="icon-sm"></i>
+                        </button>
+                    </div>
+
+                    <!-- Upload Button & Progress -->
+                    <div class="upload-actions">
+                        <button class="btn-primary btn-upload" id="btnUpload" onclick="uploadFile()" disabled>
+                            Upload to Database
+                        </button>
+                        <div class="upload-progress" id="uploadProgress">
+                            <div class="upload-progress-bar" id="uploadProgressBar" style="width: 0%"></div>
+                        </div>
+                        <div id="uploadErrorMsg"
+                            style="color:var(--error); margin-top:var(--space-2); font-size:13px; font-weight:500; display:none;">
+                        </div>
+                    </div>
+
+                    <!-- Recent Uploads -->
+                    <div class="recent-uploads">
+                        <div class="recent-uploads-title">Recent Uploads</div>
+                        <div id="uploadHistoryList">
+                            <div
+                                style="color:var(--text-muted); font-size:14px; padding:var(--space-4) 0; font-style:italic;">
+                                No uploads yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ============ SETTINGS OVERLAY ============ -->
+    <div class="settings-overlay" id="settingsOverlay">
+        <div class="settings-backdrop" onclick="closeSettings()"></div>
+        <div class="settings-panel">
+            <div class="settings-header">
+                <div class="settings-title">Settings</div>
+                <button class="btn-ghost btn-close-settings" onclick="closeSettings()" style="padding:4px;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-label">Chat Webhook URL</div>
+                <div class="settings-input-row">
+                    <input type="text" id="settingsChatUrl" placeholder="https://...">
+                    <button class="btn-secondary btn-test" id="btnTestChat" onclick="testWebhook('chat')">Test</button>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-label">Upload Webhook URL</div>
+                <div class="settings-input-row">
+                    <input type="text" id="settingsUploadUrl" placeholder="https://...">
+                    <button class="btn-secondary btn-test" id="btnTestUpload"
+                        onclick="testWebhook('upload')">Test</button>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <button class="btn-danger" onclick="clearChatHistory()"
+                style="width:100%; justify-content:flex-start; margin-bottom:var(--space-2);">
+                <i data-lucide="trash-2" class="icon-sm"></i> Clear All Chat History
+            </button>
+            <button class="btn-danger" onclick="clearUploadHistory()" style="width:100%; justify-content:flex-start;">
+                <i data-lucide="trash-2" class="icon-sm"></i> Clear Upload History
+            </button>
+
+        </div>
+    </div>
+
+    <!-- ============ NEW SESSION OVERLAY ============ -->
+    <div class="settings-overlay" id="newSessionOverlay">
+        <div class="settings-backdrop" onclick="closeNewSessionModal()"></div>
+        <div class="settings-panel">
+            <div class="settings-header">
+                <div class="settings-title">Create New Session</div>
+                <button class="btn-ghost btn-close-settings" onclick="closeNewSessionModal()" style="padding:4px;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-label">Session Name</div>
+                <input type="text" id="newSessionNameInput" placeholder="e.g. K18 Hair Products Inquiry"
+                    onkeydown="if(event.key === 'Enter') confirmNewSession()">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:8px;">
+                <button class="btn-ghost" onclick="closeNewSessionModal()">Cancel</button>
+                <button class="btn-primary" id="btnConfirmSession" onclick="confirmNewSession()">Create Chat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ USER PROFILE OVERLAY ============ -->
+    <div class="settings-overlay" id="profileOverlay">
+        <div class="settings-backdrop" onclick="closeProfileModal()"></div>
+        <div class="settings-panel">
+            <div class="settings-header">
+                <div class="settings-title">User Profile</div>
+                <button class="btn-ghost btn-close-settings" onclick="closeProfileModal()" style="padding:4px;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="profile-modal-header">
+                <img id="modalUserPhoto" src="" alt="User photo">
+                <div>
+                    <div style="font-size: 18px; font-weight: 600; font-family: var(--font-display); color: var(--text-primary);" id="modalUserName">Name</div>
+                    <div style="font-size: 13px; color: var(--text-secondary);" id="modalUserEmail">email</div>
+                    <div class="user-role" id="modalUserRole" style="margin-top: 8px;">role</div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-label">System Access Info</div>
+                <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+                    <div><strong>Google ID:</strong> <span id="modalUserId" style="font-family: var(--font-data);"></span></div>
+                    <div><strong>Logged In:</strong> <span id="modalUserLogin"></span></div>
+                </div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="profile-stat-box">
+                    <div class="profile-stat-value" id="modalStatSessions">0</div>
+                    <div class="profile-stat-label">Total Sessions</div>
+                </div>
+                <div class="profile-stat-box">
+                    <div class="profile-stat-value" id="modalStatUploads">0</div>
+                    <div class="profile-stat-label">Total Uploads</div>
+                </div>
+            </div>
+            
+            <div class="settings-divider"></div>
+
+            <button class="btn-danger" onclick="signOut()" style="width:100%; justify-content:center;">
+                <i data-lucide="log-out" class="icon-sm"></i> Sign Out completely
+            </button>
+        </div>
+    </div>
+
+    <!-- ============ GLOBAL CONFIRM MODAL ============ -->
+    <div class="settings-overlay" id="confirmOverlay">
+        <div class="settings-backdrop" onclick="closeConfirmModal()"></div>
+        <div class="settings-panel" style="max-width: 400px; padding: 24px;">
+            <div class="settings-header" style="margin-bottom: 16px;">
+                <div class="settings-title" id="confirmTitle">Confirm Action</div>
+                <button class="btn-ghost btn-close-settings" onclick="closeConfirmModal()" style="padding:4px;" id="confirmCloseBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <p id="confirmMessage" style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px; line-height: 1.5;"></p>
+
+            <div class="settings-group" id="confirmInputGroup" style="display: none;">
+                <input type="text" id="confirmInput" onkeydown="if(event.key === 'Enter') executeConfirmAction()">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top: 8px;">
+                <button class="btn-ghost" id="confirmCancelBtn" onclick="closeConfirmModal()">Cancel</button>
+                <button class="btn-primary" id="confirmActionBtn" onclick="executeConfirmAction()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/index.js"></script>
+</body>
+
+</html>

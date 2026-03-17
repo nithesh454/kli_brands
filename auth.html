@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KLI Brands Intelligence — Wholesale Cosmetics & Beauty Products">
+    <title>KLI Brands Intelligence | Sign In</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth.css">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body class="auth-body">
+
+    <script>
+        // Popup open/close (must be defined before onclick handlers)
+        function openSignInPopup() {
+            document.getElementById('authPopupOverlay').classList.add('open');
+        }
+        function closeSignInPopup() {
+            document.getElementById('authPopupOverlay').classList.remove('open');
+        }
+    </script>
+
+    <div class="auth-page">
+
+        <!-- ============ TOP NAV BAR ============ -->
+        <nav class="auth-navbar">
+            <div class="auth-nav-inner">
+                <div class="auth-nav-left">
+                    <div class="auth-nav-logo">
+                        <span class="auth-nav-logo-main">KLI</span>
+                        <span class="auth-nav-logo-sub">BRANDS</span>
+                    </div>
+                    <div class="auth-nav-links">
+                        <a href="javascript:void(0)" class="auth-nav-link active" onclick="scrollToSection('categoriesSection')">Skincare</a>
+                        <a href="javascript:void(0)" class="auth-nav-link" onclick="scrollToSection('hairSection')">Haircare</a>
+                        <a href="javascript:void(0)" class="auth-nav-link" onclick="scrollToSection('dealSection')">Sunscreen</a>
+                        <a href="javascript:void(0)" class="auth-nav-link" onclick="scrollToSection('aboutSection')">About KLI</a>
+                        <a href="javascript:void(0)" class="auth-nav-link" onclick="scrollToSection('whySection')">Why Us</a>
+                    </div>
+                </div>
+                <div class="auth-nav-right">
+                    <button class="auth-theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                        <i data-lucide="moon" id="themeIcon"></i>
+                    </button>
+                    <button class="auth-signin-btn" onclick="openSignInPopup()">Sign In</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ============ PROMO STRIP ============ -->
+        <div class="auth-promo-strip">
+            ✨ WHOLESALE BEAUTY DEALS — Up to 40% Off on Premium Skincare Brands! ✨
+        </div>
+
+        <!-- ============ SCROLLABLE CONTENT ============ -->
+        <div class="auth-content" id="authContent">
+
+            <!-- Hero Banner -->
+            <div class="auth-hero reveal">
+                <img src="/assets/products/hero-banner.png" alt="Premium Beauty Products" class="auth-hero-img">
+                <div class="auth-hero-overlay">
+                    <div class="auth-hero-text">
+                        <h1>The Professional<br>Beauty Standard</h1>
+                        <p>Wholesale skincare, haircare & beauty products at unbeatable prices</p>
+                        <button class="auth-hero-cta" onclick="openSignInPopup()">
+                            <i data-lucide="log-in" class="icon-sm"></i> Sign In to Browse Catalog
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ CATEGORY CIRCLES ============ -->
+            <section class="auth-section" id="categoriesSection">
+                <h2 class="auth-section-title reveal">Shop By Category</h2>
+                <p class="auth-section-subtitle reveal">Discover Our Premium Collection</p>
+                <div class="auth-categories">
+                    <div class="auth-category reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-category-circle">
+                            <img src="/assets/products/sunscreen.png" alt="Sunscreens">
+                        </div>
+                        <span>Sunscreens</span>
+                    </div>
+                    <div class="auth-category reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-category-circle">
+                            <img src="/assets/products/serum.png" alt="Serums">
+                        </div>
+                        <span>Serums</span>
+                    </div>
+                    <div class="auth-category reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-category-circle">
+                            <img src="/assets/products/moisturizer.png" alt="Moisturizers">
+                        </div>
+                        <span>Moisturizers</span>
+                    </div>
+                    <div class="auth-category reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-category-circle">
+                            <img src="/assets/products/cleanser.png" alt="Cleansers">
+                        </div>
+                        <span>Cleansers</span>
+                    </div>
+                    <div class="auth-category reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-category-circle">
+                            <img src="/assets/products/haircare.png" alt="Haircare">
+                        </div>
+                        <span>Haircare</span>
+                    </div>
+                    <div class="auth-category reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-category-circle grad-toner">
+                            <i data-lucide="droplets" style="width:32px;height:32px;color:var(--accent-primary);"></i>
+                        </div>
+                        <span>Toners</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ FEATURED DEAL BANNER ============ -->
+            <section class="auth-deal-banner reveal" id="dealSection">
+                <div class="auth-deal-banner-inner">
+                    <div class="auth-deal-text">
+                        <div class="auth-deal-label">LIMITED TIME OFFER</div>
+                        <h2>Sunscreens For<br>Every Skin Type</h2>
+                        <div class="auth-deal-discount">UP TO <span>30<sup>%</sup></span> OFF</div>
+                        <p>ON BESTSELLING SUNSCREENS</p>
+                        <button class="auth-deal-cta" onclick="openSignInPopup()">
+                            <i data-lucide="arrow-right" class="icon-sm"></i> Shop Now
+                        </button>
+                    </div>
+                    <div class="auth-deal-images">
+                        <img src="/assets/products/sunscreen.png" alt="Sunscreen" class="auth-deal-img float-anim-1">
+                        <img src="/assets/products/moisturizer.png" alt="Moisturizer" class="auth-deal-img float-anim-2">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ BRANDS YOU'LL LOVE (Cards) ============ -->
+            <section class="auth-section">
+                <h2 class="auth-section-title reveal">Brands You'll Love</h2>
+                <p class="auth-section-subtitle reveal">Top Skincare Brands at Wholesale Prices</p>
+                <div class="auth-brand-grid">
+                    <div class="auth-brand-card reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-brand-img" style="background: linear-gradient(135deg, #E3F2FD, #BBDEFB);">
+                            <img src="/assets/products/sunscreen.png" alt="UV Shield Pro">
+                        </div>
+                        <div class="auth-brand-info">
+                            <div class="auth-brand-name">UV Shield Pro</div>
+                            <div class="auth-brand-deal">Up to <strong>30% Off</strong></div>
+                            <div class="auth-brand-sub">On SPF 50+ Range</div>
+                        </div>
+                    </div>
+                    <div class="auth-brand-card reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-brand-img" style="background: linear-gradient(135deg, #F3E5F5, #E1BEE7);">
+                            <img src="/assets/products/serum.png" alt="Glow Essence">
+                        </div>
+                        <div class="auth-brand-info">
+                            <div class="auth-brand-name">Glow Essence</div>
+                            <div class="auth-brand-deal">Up to <strong>25% Off</strong></div>
+                            <div class="auth-brand-sub">On Entire Range</div>
+                        </div>
+                    </div>
+                    <div class="auth-brand-card reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-brand-img" style="background: linear-gradient(135deg, #E8F5E9, #C8E6C9);">
+                            <img src="/assets/products/moisturizer.png" alt="AquaDerm">
+                        </div>
+                        <div class="auth-brand-info">
+                            <div class="auth-brand-name">AquaDerm</div>
+                            <div class="auth-brand-deal"><strong>Flat 20% Off</strong></div>
+                            <div class="auth-brand-sub">On Bestsellers</div>
+                        </div>
+                    </div>
+                    <div class="auth-brand-card reveal-item" onclick="openSignInPopup()">
+                        <div class="auth-brand-img" style="background: linear-gradient(135deg, #FFF3E0, #FFE0B2);">
+                            <img src="/assets/products/cleanser.png" alt="PureClean">
+                        </div>
+                        <div class="auth-brand-info">
+                            <div class="auth-brand-name">PureClean</div>
+                            <div class="auth-brand-deal">Up to <strong>35% Off</strong></div>
+                            <div class="auth-brand-sub">Buy 2 Get Extra 5%</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ BEST OF SKINCARE (Horizontal Scroll) ============ -->
+            <section class="auth-section" id="hairSection">
+                <h2 class="auth-section-title reveal">Best of Skincare</h2>
+                <p class="auth-section-subtitle reveal">Brands In the Spotlight</p>
+                <div class="auth-spotlight-scroll">
+                    <div class="auth-spotlight-card reveal-item" onclick="openSignInPopup()">
+                        <img src="/assets/products/serum.png" alt="Hyaluronic Serum">
+                        <div class="auth-spotlight-overlay">
+                            <div class="auth-spotlight-name">Hyaluronic Acid Serum</div>
+                            <div class="auth-spotlight-price">From <strong>$18.50</strong>/unit</div>
+                        </div>
+                    </div>
+                    <div class="auth-spotlight-card reveal-item" onclick="openSignInPopup()">
+                        <img src="/assets/products/sunscreen.png" alt="SPF 50+ Shield">
+                        <div class="auth-spotlight-overlay">
+                            <div class="auth-spotlight-name">Broad Spectrum SPF 50+</div>
+                            <div class="auth-spotlight-price">From <strong>$16.43</strong>/unit</div>
+                        </div>
+                    </div>
+                    <div class="auth-spotlight-card reveal-item" onclick="openSignInPopup()">
+                        <img src="/assets/products/moisturizer.png" alt="Ceramide Moisturizer">
+                        <div class="auth-spotlight-overlay">
+                            <div class="auth-spotlight-name">Daily Ceramide Moisturizer</div>
+                            <div class="auth-spotlight-price">From <strong>$22.00</strong>/unit</div>
+                        </div>
+                    </div>
+                    <div class="auth-spotlight-card reveal-item" onclick="openSignInPopup()">
+                        <img src="/assets/products/haircare.png" alt="Repair Oil">
+                        <div class="auth-spotlight-overlay">
+                            <div class="auth-spotlight-name">Keratin Repair Hair Oil</div>
+                            <div class="auth-spotlight-price">From <strong>$14.80</strong>/unit</div>
+                        </div>
+                    </div>
+                    <div class="auth-spotlight-card reveal-item" onclick="openSignInPopup()">
+                        <img src="/assets/products/cleanser.png" alt="Gentle Cleanser">
+                        <div class="auth-spotlight-overlay">
+                            <div class="auth-spotlight-name">Gentle Foam Cleanser</div>
+                            <div class="auth-spotlight-price">From <strong>$12.30</strong>/unit</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ ABOUT KLI BRANDS ============ -->
+            <section class="auth-about reveal" id="aboutSection">
+                <div class="auth-about-inner">
+                    <div class="auth-about-text">
+                        <div class="auth-about-label">ABOUT KLI BRANDS</div>
+                        <h2>Your Trusted Partner in<br>Wholesale Beauty</h2>
+                        <p>KLI Brands is a leading wholesale distributor of premium skincare, haircare, and body care products. We partner with top dermatologist-recommended brands to bring you professional-grade beauty products at unbeatable wholesale prices.</p>
+                        <div class="auth-about-stats">
+                            <div class="auth-stat">
+                                <span class="auth-stat-number">500+</span>
+                                <span class="auth-stat-label">Products</span>
+                            </div>
+                            <div class="auth-stat">
+                                <span class="auth-stat-number">50+</span>
+                                <span class="auth-stat-label">Premium Brands</span>
+                            </div>
+                            <div class="auth-stat">
+                                <span class="auth-stat-number">1000+</span>
+                                <span class="auth-stat-label">Retail Partners</span>
+                            </div>
+                            <div class="auth-stat">
+                                <span class="auth-stat-number">24/7</span>
+                                <span class="auth-stat-label">AI Support</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="auth-about-images">
+                        <img src="/assets/products/serum.png" alt="" class="auth-about-img img-1 float-anim-1">
+                        <img src="/assets/products/sunscreen.png" alt="" class="auth-about-img img-2 float-anim-2">
+                        <img src="/assets/products/haircare.png" alt="" class="auth-about-img img-3 float-anim-1">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ WHY CHOOSE KLI ============ -->
+            <section class="auth-section" id="whySection">
+                <h2 class="auth-section-title reveal" style="text-align:center;">Why Choose KLI Brands?</h2>
+                <p class="auth-section-subtitle reveal" style="text-align:center;">Built for beauty professionals who demand the best</p>
+                <div class="auth-why-grid">
+                    <div class="auth-why-card reveal-item">
+                        <div class="auth-why-icon"><i data-lucide="search"></i></div>
+                        <h3>AI-Powered Search</h3>
+                        <p>Find any product in seconds with our intelligent catalog search powered by advanced AI</p>
+                    </div>
+                    <div class="auth-why-card reveal-item">
+                        <div class="auth-why-icon"><i data-lucide="trending-down"></i></div>
+                        <h3>Wholesale Pricing</h3>
+                        <p>Access exclusive wholesale prices up to 40% below retail. Bulk discounts on every order</p>
+                    </div>
+                    <div class="auth-why-card reveal-item">
+                        <div class="auth-why-icon"><i data-lucide="shield-check"></i></div>
+                        <h3>Authentic Products</h3>
+                        <p>100% genuine products sourced directly from authorized brand distributors</p>
+                    </div>
+                    <div class="auth-why-card reveal-item">
+                        <div class="auth-why-icon"><i data-lucide="zap"></i></div>
+                        <h3>Real-Time Inventory</h3>
+                        <p>Live stock availability and pricing updated every minute across all products</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ CTA BANNER ============ -->
+            <section class="auth-cta-banner reveal">
+                <h2>Ready to Grow Your Beauty Business?</h2>
+                <p>Sign in to access wholesale pricing, AI-powered product search, and real-time inventory</p>
+                <button class="auth-cta-btn" onclick="openSignInPopup()">
+                    <i data-lucide="log-in" class="icon-sm"></i> Get Started — Sign In Now
+                </button>
+            </section>
+
+            <!-- ============ FOOTER ============ -->
+            <footer class="auth-page-footer">
+                <div class="auth-footer-inner">
+                    <div class="auth-footer-top">
+                        <div class="auth-footer-brand">
+                            <span class="auth-nav-logo-main" style="font-size:28px;">KLI</span>
+                            <span class="auth-nav-logo-sub" style="font-size:9px;">BRANDS</span>
+                        </div>
+                        <div class="auth-footer-links">
+                            <a href="javascript:void(0)" onclick="scrollToSection('categoriesSection')">Skincare</a>
+                            <a href="javascript:void(0)" onclick="scrollToSection('hairSection')">Haircare</a>
+                            <a href="javascript:void(0)" onclick="scrollToSection('dealSection')">Sunscreen</a>
+                            <a href="javascript:void(0)" onclick="scrollToSection('aboutSection')">About KLI</a>
+                            <a href="javascript:void(0)" onclick="scrollToSection('whySection')">Why Us</a>
+                        </div>
+                    </div>
+                    <div class="auth-footer-divider"></div>
+                    <div class="auth-footer-bottom">
+                        <div class="auth-footer-text">&copy; 2026 KLI Brands &middot; The Professional Beauty Standard</div>
+                        <div class="auth-footer-text" style="font-size:11px;">Wholesale Cosmetics &middot; Skincare &middot; Haircare &middot; Beauty &middot; Wellness</div>
+                    </div>
+                </div>
+                    </div>
+    </div>
+    <!-- *** POPUP IS OUTSIDE .auth-page so it is NOT clipped by overflow:hidden *** -->
+    <div class="auth-popup-overlay" id="authPopupOverlay">
+        <div class="auth-popup-backdrop" onclick="closeSignInPopup()"></div>
+        <div class="auth-popup-card">
+            <button class="auth-popup-close" onclick="closeSignInPopup()">
+                <i data-lucide="x"></i>
+            </button>
+
+            <div id="view-login" class="auth-view active">
+                <div class="auth-popup-title">Login or Sign Up</div>
+                <div class="auth-popup-subtitle">Access wholesale beauty pricing &amp; AI-powered catalog search</div>
+                <div class="auth-popup-divider"><span>Sign in using</span></div>
+
+                <button id="custom-google-btn" class="btn-google" onclick="triggerGoogleSignIn()">
+                    <div class="spinner"></div>
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
+                    <span>Continue with Google</span>
+                </button>
+
+                <div class="auth-popup-disclaimer">
+                    By signing in, you agree to KLI Brands' Terms of Service.<br>
+                    Access restricted to authorized team members.
+                </div>
+            </div>
+
+            <div id="view-denied" class="auth-view">
+                <div class="denied-icon">
+                    <i data-lucide="shield-x" style="width:36px;height:36px;color:var(--accent-primary);"></i>
+                </div>
+                <div class="auth-popup-title" style="color:var(--accent-primary);">Access Denied</div>
+                <div class="auth-popup-subtitle">Your account is not authorized to access KLI Intelligence.</div>
+                <div class="auth-popup-disclaimer" style="margin-bottom:20px;">Contact your KLI Brands administrator to request access.</div>
+                <button class="btn-secondary" style="width:100%" onclick="resetLogin()">
+                    <i data-lucide="arrow-left" class="icon-sm"></i> Try a different account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden native Google button container -->
+    <div id="google-signin-wrapper">
+        <div id="g_id_onload" data-client_id="827677866237-toga9ql7jqh60ut8tcckl8i5e0u6g6ol.apps.googleusercontent.com"
+            data-context="signin" data-ux_mode="popup" data-callback="handleGoogleLogin" data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+            data-text="signin_with" data-size="large" data-logo_alignment="left">
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Scroll sections inside auth-content container
+        function scrollToSection(sectionId) {
+            const scrollContainer = document.getElementById('authContent');
+            const section = document.getElementById(sectionId);
+            if (scrollContainer && section) {
+                scrollContainer.scrollTo({ top: section.offsetTop - 10, behavior: 'smooth' });
+            }
+        }
+
+        // Scroll Reveal Animations
+        function initScrollReveal() {
+            const scrollContainer = document.getElementById('authContent');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('revealed');
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px', root: scrollContainer });
+
+            document.querySelectorAll('.reveal, .reveal-item').forEach(el => observer.observe(el));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initScrollReveal();
+        });
+    </script>
+</body>
+
+</html>
