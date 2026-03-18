@@ -62,31 +62,8 @@ function updateThemeIcon(theme) {
 // GOOGLE SIGN-IN FLOW
 // ============================================
 
-// Triggered by the custom button
-function triggerGoogleSignIn() {
-    const btn = document.getElementById('custom-google-btn');
-    btn.classList.add('loading');
-    btn.disabled = true;
-
-    // Click the hidden native Google button
-    const hiddenBtn = document.querySelector('.g_id_signin div[role="button"]');
-    if (hiddenBtn) {
-        hiddenBtn.click();
-    } else {
-        // Fallback if Google script hasn't fully rendered the button yet
-        setTimeout(() => {
-            btn.classList.remove('loading');
-            btn.disabled = false;
-        }, 1000);
-    }
-}
-
 // Callback from Google
 async function handleGoogleLogin(response) {
-    const btn = document.getElementById('custom-google-btn');
-    btn.classList.add('loading'); // Keep it spinning during webhook
-    btn.disabled = true;
-
     try {
         const userData = parseJwt(response.credential);
 
@@ -133,9 +110,6 @@ async function handleGoogleLogin(response) {
         console.warn("Auth Webhook failed:", e);
         // If n8n completely crashes, fail securely
         showAccessDenied();
-    } finally {
-        btn.classList.remove('loading');
-        btn.disabled = false;
     }
 }
 
