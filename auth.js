@@ -23,6 +23,27 @@ window.onload = function () {
     updateThemeIcon(savedTheme);
     lucide.createIcons();
 
+    // Check if redirecting back from Google auth
+    const hashStr = window.location.hash.substring(1);
+    const hashParams = new URLSearchParams(hashStr);
+    if (hashParams.has('id_token')) {
+        const idToken = hashParams.get('id_token');
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Open the popup automatically to show loading state
+        openSignInPopup();
+        const btn = document.getElementById('custom-google-btn');
+        if (btn) {
+            btn.classList.add('loading');
+            btn.disabled = true;
+        }
+
+        // Authenticate with the backend
+        handleGoogleLogin({ credential: idToken });
+        return;
+    }
+
     // If already logged in, redirect to app
     if (checkAuth()) {
         redirectToApp();
@@ -61,6 +82,29 @@ function updateThemeIcon(theme) {
 // ============================================
 // GOOGLE SIGN-IN FLOW
 // ============================================
+
+// Triggered by the custom button -> Redirects completely to Google
+function redirectToGoogle() {
+    const btn = document.getElementById('custom-google-btn');
+    if (btn) {
+        btn.classList.add('loading');
+        btn.disabled = true;
+    }
+    
+    // Auto-detect redirect URI based on current environment (localhost vs Vercel)
+    const redirectUri = window.location.origin + '/auth.html';
+    const nonce = Math.random().toString(36).substring(2);
+    
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+        `client_id=${GOOGLE_CLIENT_ID}` +
+        `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+        `&response_type=id_token` +
+        `&scope=openid%20email%20profile` +
+        `&nonce=${nonce}`;
+
+    window.location.href = googleAuthUrl;
+}
+
 
 // Callback from Google
 async function handleGoogleLogin(response) {
